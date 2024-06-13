@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class PropertyRecommendationService {
+public class PropertyViewService {
 
     @Autowired
     private PropertyViewRepository propertyViewRepository;
@@ -22,7 +22,7 @@ public class PropertyRecommendationService {
     // Mocked data
     private Map<String, Map<String, Integer>> userPropertyViews;
 
-    public PropertyRecommendationService() {
+    public PropertyViewService() {
         userPropertyViews = new HashMap<>();
 
         Map<String, Integer> user1Views = new HashMap<>();
@@ -128,4 +128,15 @@ public class PropertyRecommendationService {
         propertyViewRepository.save(propertyView);
     }
 
+//    public static void main(String[] args) {
+//        PropertyViewService service = new PropertyViewService();
+//
+//        String selectedProperty = "Property2";
+//        List<String> recommendations = service.getRecommendedProperties(selectedProperty);
+//
+//        System.out.println("Recommended properties for " + selectedProperty + ":");
+//        for (String property : recommendations) {
+//            System.out.println(property);
+//        }
+//    }
 }

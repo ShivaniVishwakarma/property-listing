@@ -1,16 +1,16 @@
 package com.engelandvolkers.property_listing.controllers;
 
+import com.engelandvolkers.property_listing.dtos.PropertyDetailResponse;
 import com.engelandvolkers.property_listing.entities.Property;
-import com.engelandvolkers.property_listing.services.PropertyRecommendationService;
+import com.engelandvolkers.property_listing.services.PropertyViewService;
 import com.engelandvolkers.property_listing.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/task")
@@ -20,7 +20,7 @@ public class PropertyController {
     private PropertyService propertyService;
 
     @Autowired
-    private PropertyRecommendationService propertyViewService;
+    private PropertyViewService propertyViewService;
 
     @GetMapping("/properties")
     public ResponseEntity<List<Property>> getAllProperties() {
@@ -39,13 +39,20 @@ public class PropertyController {
 
         // Calculate recommended properties
         List<String> recommendedProperties = propertyViewService.getRecommendedProperties(propertyId);
-        System.out.println(recommendedProperties);
+
+        List<Property> recommendedPropertiesList = new ArrayList<>();
+        for (String pid : recommendedProperties) {
+            Property recommendedProperty = propertyViewService.getPropertyByPropertyId(propertyId);
+            if (recommendedProperty != null) {
+                recommendedPropertiesList.add(recommendedProperty);
+            }
+        }
 
         // Track property view
-        //propertyRecommendationService.trackPropertyView(propertyId, userName);
+        propertyViewService.trackPropertyView(propertyId, userName);
 
-        //PropertyDetailResponse response = new PropertyDetailResponse(property, recommendedProperties);
+        PropertyDetailResponse response = new PropertyDetailResponse(property, recommendedPropertiesList);
 
-        return ResponseEntity.ok(property);
+        return ResponseEntity.ok(response);
     }
 }
