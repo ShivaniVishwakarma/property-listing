@@ -1,8 +1,7 @@
 package com.engelandvolkers.property_listing.controllers;
 
-import com.engelandvolkers.property_listing.dtos.PropertyDetailResponse;
-import com.engelandvolkers.property_listing.dtos.PropertyDto;
 import com.engelandvolkers.property_listing.entities.Property;
+import com.engelandvolkers.property_listing.services.PropertyRecommendationService;
 import com.engelandvolkers.property_listing.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +19,8 @@ public class PropertyController {
     @Autowired
     private PropertyService propertyService;
 
-//    @GetMapping("/properties")
-//    public ResponseEntity<List<PropertyDto>> getAllProperties() {
-//        List<PropertyDto> properties = propertyService.getAllProperties();
-//        return new ResponseEntity<>(properties, HttpStatus.OK);
-//    }
+    @Autowired
+    private PropertyRecommendationService propertyViewService;
 
     @GetMapping("/properties")
     public ResponseEntity<List<Property>> getAllProperties() {
@@ -33,32 +29,20 @@ public class PropertyController {
     }
 
 
-//    @GetMapping("/{propertyId}")
-//    public ResponseEntity<Object> getPropertyById(@PathVariable String propertyId) {
-//        Optional<Property> property = propertyService.getPropertyByPropertyId(propertyId);
-//        if (property.isPresent()) {
-//            return new ResponseEntity<>(property.get(), HttpStatus.OK);
-//        } else {
-//            ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "Property with requested property id is not found");
-//            return new ResponseEntity<>(pd, HttpStatus.NOT_FOUND);
-//        }
-//    }
-
     @GetMapping("/{propertyId}")
     public ResponseEntity<Object> getPropertyDetails(
             @PathVariable("propertyId") String propertyId,
             @RequestParam("userName") String userName) {
 
         // Get property details
-        Property property = propertyService.getPropertyByPropertyId(propertyId);
+        Property property = propertyViewService.getPropertyByPropertyId(propertyId);
 
         // Calculate recommended properties
-        //List<Property> recommendedProperties = propertyService.getRecommendedProperties(propertyId);
+        List<String> recommendedProperties = propertyViewService.getRecommendedProperties(propertyId);
+        System.out.println(recommendedProperties);
 
         // Track property view
-        //.trackPropertyView(propertyId, userName);
-
-
+        //propertyRecommendationService.trackPropertyView(propertyId, userName);
 
         //PropertyDetailResponse response = new PropertyDetailResponse(property, recommendedProperties);
 

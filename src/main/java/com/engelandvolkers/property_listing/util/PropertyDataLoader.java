@@ -1,9 +1,7 @@
-package com.engelandvolkers.property_listing.services;
+package com.engelandvolkers.property_listing.util;
 
 import com.engelandvolkers.property_listing.entities.Property;
-import com.engelandvolkers.property_listing.entities.PropertyView;
 import com.engelandvolkers.property_listing.repositories.PropertyRepository;
-import com.engelandvolkers.property_listing.repositories.PropertyViewRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.commons.csv.CSVFormat;
@@ -21,35 +19,37 @@ import java.util.List;
 
 
 @Component
-public class PropertyViewDataLoader {
+public class PropertyDataLoader {
 
     @Autowired
-    private PropertyViewRepository propertyViewRepository;
+    private PropertyRepository propertyRepository;
 
     @Autowired
-    public PropertyViewDataLoader(PropertyViewRepository propertyViewRepository) {
-        this.propertyViewRepository = propertyViewRepository;
+    public PropertyDataLoader(PropertyRepository propertyRepository) {
+        this.propertyRepository = propertyRepository;
     }
 
     @PostConstruct
     @Transactional
     public void loadPropertyData() throws IOException {
 
-        String csvFilePath = "property-views.csv";
+        String csvFilePath = "properties.csv";
 
         try (Reader reader = new FileReader(new ClassPathResource(csvFilePath).getFile())) {
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader());
 
-            List<PropertyView> propertyViews = new ArrayList<>();
+            List<Property> properties = new ArrayList<>();
             for (CSVRecord csvRecord : csvParser) {
-                PropertyView propertyView = new PropertyView();
-                propertyView.setPid(csvRecord.get("property"));
-                propertyView.setUsername(csvRecord.get("user"));
+                Property property = new Property();
+                property.setPid(csvRecord.get("id"));
+                property.setName(csvRecord.get("name"));
+                property.setDetails(csvRecord.get("details"));
+                property.setPrice(Double.parseDouble(csvRecord.get("price")));
 
-                propertyViews.add(propertyView);
+                properties.add(property);
             }
 
-            propertyViewRepository.saveAll(propertyViews);
+            propertyRepository.saveAll(properties);
         }
     }
 

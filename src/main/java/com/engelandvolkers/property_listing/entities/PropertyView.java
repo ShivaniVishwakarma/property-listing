@@ -22,9 +22,10 @@ public class PropertyView {
     public PropertyView() {
     }
 
-    public PropertyView(Long id, Property property, String username) {
+    public PropertyView(Long id, Property property, String pid, String username) {
         this.id = id;
         this.property = property;
+        this.pid = pid;
         this.username = username;
     }
 
