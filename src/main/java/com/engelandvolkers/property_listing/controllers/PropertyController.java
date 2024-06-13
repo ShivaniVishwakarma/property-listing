@@ -1,5 +1,6 @@
 package com.engelandvolkers.property_listing.controllers;
 
+import com.engelandvolkers.property_listing.dtos.PropertyDetailResponse;
 import com.engelandvolkers.property_listing.dtos.PropertyDto;
 import com.engelandvolkers.property_listing.entities.Property;
 import com.engelandvolkers.property_listing.services.PropertyService;
@@ -31,14 +32,36 @@ public class PropertyController {
         return new ResponseEntity<>(properties, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getPropertyById(@PathVariable Long id) {
-        Optional<PropertyDto> property = propertyService.getPropertyById(id);
-        if (property.isPresent()) {
-            return new ResponseEntity<>(property.get(), HttpStatus.OK);
-        } else {
-            ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "Property with requested id is not found");
-            return new ResponseEntity<>(pd, HttpStatus.NOT_FOUND);
-        }
+
+//    @GetMapping("/{propertyId}")
+//    public ResponseEntity<Object> getPropertyById(@PathVariable String propertyId) {
+//        Optional<Property> property = propertyService.getPropertyByPropertyId(propertyId);
+//        if (property.isPresent()) {
+//            return new ResponseEntity<>(property.get(), HttpStatus.OK);
+//        } else {
+//            ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "Property with requested property id is not found");
+//            return new ResponseEntity<>(pd, HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    @GetMapping("/{propertyId}")
+    public ResponseEntity<Object> getPropertyDetails(
+            @PathVariable("propertyId") String propertyId,
+            @RequestParam("userName") String userName) {
+
+        // Get property details
+        Property property = propertyService.getPropertyByPropertyId(propertyId);
+
+        // Calculate recommended properties
+        //List<Property> recommendedProperties = propertyService.getRecommendedProperties(propertyId);
+
+        // Track property view
+        //.trackPropertyView(propertyId, userName);
+
+
+
+        //PropertyDetailResponse response = new PropertyDetailResponse(property, recommendedProperties);
+
+        return ResponseEntity.ok(property);
     }
 }
