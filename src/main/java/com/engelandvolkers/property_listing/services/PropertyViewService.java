@@ -49,6 +49,9 @@ public class PropertyViewService {
                 .orElseThrow(() -> new RuntimeException("Property not found"));
     }
 
+    //Get the view patterns for the selected property.
+    //Compare this pattern with the view patterns of other properties.
+    //Sort and return the properties that have similar view patterns.
     public List<String> getRecommendedProperties(String selectedPropertyPid) {
         Map<String, Integer> selectedPropertyViews = getPropertyViewsForProperty(selectedPropertyPid);
 
@@ -69,6 +72,7 @@ public class PropertyViewService {
         return recommendedProperties;
     }
 
+    //This method collects how many times each user has viewed a specific property
     private Map<String, Integer> getPropertyViewsForProperty(String propertyPid) {
         Map<String, Integer> propertyViews = new HashMap<>();
 
@@ -128,15 +132,15 @@ public class PropertyViewService {
         propertyViewRepository.save(propertyView);
     }
 
-//    public static void main(String[] args) {
-//        PropertyViewService service = new PropertyViewService();
-//
-//        String selectedProperty = "Property2";
-//        List<String> recommendations = service.getRecommendedProperties(selectedProperty);
-//
-//        System.out.println("Recommended properties for " + selectedProperty + ":");
-//        for (String property : recommendations) {
-//            System.out.println(property);
-//        }
-//    }
+    public static void main(String[] args) {
+        PropertyViewService service = new PropertyViewService();
+
+        String selectedProperty = "Property2";
+        List<String> recommendations = service.getRecommendedProperties(selectedProperty);
+
+        System.out.println("Recommended properties for " + selectedProperty + ":");
+        for (String property : recommendations) {
+            System.out.println(property);
+        }
+    }
 }
